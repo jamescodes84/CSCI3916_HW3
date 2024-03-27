@@ -6,8 +6,8 @@ var bcrypt = require('bcrypt-nodejs');
 
 mongoose.Promise = global.Promise;
 try {
-    mongoose.connect( process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
-        console.log("connected"));
+   await mongoose.connect( process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true});
+   console.log("Connected")
 }catch (error) {
     console.log("could not connect");
 }
