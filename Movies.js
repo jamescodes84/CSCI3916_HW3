@@ -1,3 +1,8 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+mongoose.connect(process.env.DB);
+
 const MovieSchema = new mongoose.Schema({
     title: { type: String, required: true, index: true },
     releaseDate: Date,
