@@ -91,21 +91,7 @@ router.post('/signin', (req, res) => {
                 res.status(401).send({success: false, msg: 'Authentication failed.'});
             }
         })
-    })
-
-
-
-
-    if (!user) {
-        res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
-    } else {
-        if (req.body.password == user.password) {
-            
-        }
-        else {
-            
-        }
-    }
+    });
 });
 
 // router.route('/testcollection')
