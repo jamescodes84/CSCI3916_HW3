@@ -18,8 +18,8 @@ var authJwtController = require('./auth_jwt');
 //db = require('./db')(); //hack
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
-var user = require('./Users');
-var movie = require('./Movies');
+var User = require('./Users');
+var Movie = require('./Movies');
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -52,7 +52,7 @@ router.post('/signup', (req, res) => {
         res.json({success: false, msg: 'Please include both username and password to signup.'})
     } else {
 
-        var user = new user();
+        var user = new User();
         user.name = req.body.name;
         user.username = req.body.username;
         user.password = req.body.password;
@@ -73,11 +73,11 @@ router.post('/signup', (req, res) => {
 });
 
 router.post('/signin', (req, res) => {
-    var userNew = new user();
+    var userNew = new User();
     userNew.username = req.body.username;
     userNew.password = req.body.password;
 
-    user.findOne({username: userNew.username}).select('name username password').exec(function(err, user){
+    User.findOne({username: userNew.username}).select('name username password').exec(function(err, user){
         if (err) {
             res.send(err);
         }
@@ -133,7 +133,7 @@ router.post('/signin', (req, res) => {
 
     router.route('/movies')
     .get(authJwtController.isAuthenticated,(req, res) => {
-        movie.find(function(err, movies){
+        Movie.find(function(err, movies){
             if (err) {
                 res.status(500).send(err);
             } 
@@ -143,7 +143,7 @@ router.post('/signin', (req, res) => {
     })
     .post(authJwtController.isAuthenticated,(req, res) => {
         // Implementation here
-        let newMovie = new movie();
+        let newMovie = new Movie();
         newMovie.title = req.body.title;
         newMovie.releaseDate = req.body.releaseDate;
         newMovie.genre= req.body.genre;
