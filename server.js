@@ -19,7 +19,7 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var user = require('./Users');
-
+var movie = require('./Movies');
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -132,45 +132,40 @@ router.post('/signin', (req, res) => {
 
 
     router.route('/movies')
-    .get((req, res) => {
+    .get(authJwtController.isAuthenticated,(req, res) => {
+        movie.find(function(err, movies){
+            if (err) {
+                res.status(500).send(err);
+            } 
+            res.send(movies);
+        })
         
-        const o = {
-            status: 200,
-            message: 'GET movies',
-            headers: req.headers,
-            query: req.query,
-            key: process.env.UNIQUE_KEY
-        };
-        res.json(o);
     })
-    .post((req, res) => {
+    .post(authJwtController.isAuthenticated,(req, res) => {
         // Implementation here
-        const o = {
-            status: 200,
-            message: 'movie saved',
-            headers: req.headers,
-            query: req.query,
-            env: process.env.UNIQUE_KEY
-        };
-        res.json(o);
+        let newMovie = new movie();
+        newMovie.title = req.body.title;
+        newMovie.releaseDate = req.body.releaseDate;
+        newMovie.genre= req.body.genre;
+        newMovie.actors = req.body.actors;
+        newMovie.save(function(err){
+            if (err) {
+                if (err.code == 11000) {
+                    return res.status(400).json({
+                        success: "False",
+                        message: "Title already exists"
+                    });
+                }
+                return res.status(500).send(err);
+            }
+            res.json({message:"Movie Created"});
+        });
     })
     .put(authJwtController.isAuthenticated, (req, res) => {
-        // HTTP PUT Method
-        // Requires JWT authentication.
-        // Returns a JSON object with status, message, headers, query, and env.
-        var o = getJSONObjectForMovieRequirement(req);
-        o.status = 200;
-        o.message = "movie updated";
-        res.json(o);
+       
     })
-    .delete(authController.isAuthenticated, (req, res) => {
-        // HTTP DELETE Method
-        // Requires Basic authentication.
-        // Returns a JSON object with status, message, headers, query, and env.
-        var o = getJSONObjectForMovieRequirement(req);
-        o.status = 200;
-        o.message = "movie deleted";
-        res.json(o);
+    .delete(authJwtController.isAuthenticated, (req, res) => {
+       
     })
     .all((req, res) => {
         // Any other HTTP Method
