@@ -5,13 +5,10 @@ var bcrypt = require('bcrypt-nodejs');
 
 
 mongoose.Promise = global.Promise;
-try {
-   await mongoose.connect( process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true});
-   console.log("Connected")
-}catch (error) {
-    console.log("could not connect");
-}
-//mongoose.set('useCreateIndex', true);
+mongoose.connect( process.env.DB).catch(error => (console.log(error)));
+  
+
+//mongose.set('useCreateIndex', true);
 //User Schema
 var UserSchema = new Schema({
     name: String,
