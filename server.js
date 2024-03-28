@@ -148,10 +148,31 @@ router.post('/signin', (req, res) => {
         });
     })
     .put(authJwtController.isAuthenticated, (req, res) => {
-       
+        Movie.findOneAndUpdate(
+            { title: req.body.title },
+            req.body,
+            { new: true, upsert: true },
+            function(err, movie) {
+                if (err) {
+                    return res.status(500).send(err);
+                }
+                res.json({ message: "Movie Updated", movie: movie });
+            }
+        );
     })
     .delete(authJwtController.isAuthenticated, (req, res) => {
-       
+        Movie.findOneAndDelete({ title: req.body.title }, function(err, movie) {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            if (!movie) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Movie not found"
+                });
+            }
+            res.json({ message: "Movie Deleted", movie: movie });
+        });
     })
     .all((req, res) => {
         // Any other HTTP Method
