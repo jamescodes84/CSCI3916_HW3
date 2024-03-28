@@ -161,7 +161,7 @@ router.post('/signin', (req, res) => {
         );
     })
     .delete(authJwtController.isAuthenticated, (req, res) => {
-        Movie.findOneAndDelete({ title: req.body.title }, function(err, movie) {
+       // Movie.findOneAndDelete({ title: req.body.title }, function(err, movie) {
             if (err) {
                 return res.status(500).send(err);
             }
@@ -172,7 +172,7 @@ router.post('/signin', (req, res) => {
                 });
             }
             res.json({ message: "Movie Deleted", movie: movie });
-        });
+        //});
     })
     .all((req, res) => {
         // Any other HTTP Method
