@@ -115,7 +115,7 @@ router.post('/signin', (req, res) => {
 //         res.json(o);
 //     }
 //     );
-
+//ChatGPT helped me with these last two routes, I had no idea what to do
 
     router.route('/movies')
     .get(authJwtController.isAuthenticated,(req, res) => {
